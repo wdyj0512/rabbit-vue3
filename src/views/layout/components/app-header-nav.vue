@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import useStore from '@/store/index';
 const {category} = useStore()
-category.getCategoryList()
+// category.getCategoryList()
 
 </script>
 
