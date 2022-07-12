@@ -1,0 +1,90 @@
+<script lang="ts" setup>
+import useStore from '@/store/index'
+import { watchEffect } from 'vue';
+import {useRoute} from 'vue-router'
+import GoodsImage from './components/goods-image.vue'
+const route = useRoute()
+const {goods} = useStore()
+watchEffect(()=>{
+    if(route.fullPath !== "/goods/" + route.params.id) return 
+    goods.resetGoodsInfo()
+    goods.getGoodsInfo(route.params.id as string)
+})
+// console.log(route.fullPath);
+
+</script>
+<template>
+  <div class="xtx-goods-page">
+    <div class="container">
+      <!-- 面包屑 -->
+   <transition>
+     <div v-if="goods.info.categories">
+          <XtxBread>
+        <XtxBreadItem to="/">首页</XtxBreadItem>
+        <XtxBreadItem :to="`/category/${goods.info.categories[1].id}`">{{goods.info.categories[1].name}}</XtxBreadItem>
+        <XtxBreadItem :to="`/category/sub/${goods.info.categories[0].id}`">{{goods.info.categories[0].name}}</XtxBreadItem>
+        <XtxBreadItem >{{goods.info.name}}</XtxBreadItem>
+      </XtxBread>
+    </div>
+    <div v-else>
+         <XtxBread >
+        <XtxBreadItem to="/">首页</XtxBreadItem>
+        <XtxBreadItem>
+          <XtxSkeleton :width="28" :height="19" animated/>
+        </XtxBreadItem>
+        <XtxBreadItem>
+        <XtxSkeleton :width="56" :height="19" animated/>
+        </XtxBreadItem>
+          <XtxBreadItem>
+        <XtxSkeleton :width="186" :height="19" animated/>
+        </XtxBreadItem>
+      </XtxBread>
+    </div>
+   </transition>
+      <!-- 商品信息 -->
+      <div class="goods-info">
+     <div class="media">
+        <GoodsImage v-if="goods.info.mainPictures" :images="goods.info.mainPictures"/>
+     </div>
+     <div class="spec"></div>
+     </div>
+      <!-- 商品详情 -->
+      <div class="goods-footer">
+        <div class="goods-article">
+          <!-- 商品+评价 -->
+          <div class="goods-tabs"></div>
+        </div>
+        <!-- 24热榜+专题推荐 -->
+        <div class="goods-aside"></div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped lang="less">
+.goods-info {
+  min-height: 600px;
+  background: #fff;
+}
+.goods-footer {
+  display: flex;
+  margin-top: 20px;
+  .goods-article {
+    width: 940px;
+    margin-right: 20px;
+  }
+  .goods-aside {
+    width: 280px;
+    min-height: 1000px;
+  }
+}
+.goods-tabs {
+  min-height: 600px;
+  background: #fff;
+}
+.goods-warn {
+  min-height: 600px;
+  background: #fff;
+  margin-top: 20px;
+}
+</style>

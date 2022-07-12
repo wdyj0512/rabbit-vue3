@@ -23,12 +23,21 @@ const router = createRouter({
                 {
                     path:'/lazy',
                     component:()=>import('@/views/lazy.vue')
-                }
+                },
+                {
+                    path: '/goods/:id',
+                    component: () => import('@/views/goods/index.vue'),
+                  },
             ]
         
         },
         {path:'/login',component:()=> import('@/views/login/index.vue') }
     ],
-    history:createWebHashHistory()
+    history:createWebHashHistory(),
+    scrollBehavior: () => {
+        return {
+          top: 0,
+        }
+      },
 })
 export default router
