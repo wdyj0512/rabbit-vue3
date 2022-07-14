@@ -145,4 +145,28 @@ export type GoodsInfo = {
     id: string
     name: string
   }[]
+  specs:spec[]
+  skus: Sku[]
+}
+export type spec = {
+  name:string
+  values:valueItem[]
+}
+export type valueItem = {
+  desc:string
+  name:string
+  picture:string
+  selected:boolean
+  disabled: boolean
+}
+export type Sku = {
+  id: string
+  inventory: number
+  oldPrice: string
+  price: string
+  skuCode: string
+  specs: {
+    name: string
+    valueName: string
+  }[]
 }
