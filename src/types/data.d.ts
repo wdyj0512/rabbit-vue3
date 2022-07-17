@@ -147,6 +147,7 @@ export type GoodsInfo = {
   }[]
   specs:spec[]
   skus: Sku[]
+  details: GoodsDetail
 }
 export type spec = {
   name:string
@@ -169,4 +170,24 @@ export type Sku = {
     name: string
     valueName: string
   }[]
+}
+type GoodsDetail = {
+  pictures: string[]
+  properties: {
+    name: string
+    value: string
+  }[]
+}
+export interface Profile {
+  id: string;
+  account: string;
+  mobile: string;
+  token: string;
+  avatar: string;
+  nickname: string;
+  gender: string;
+  birthday?: any;
+  cityCode: string;
+  provinceCode: string;
+  profession: string;
 }
