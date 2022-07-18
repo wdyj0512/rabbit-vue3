@@ -1,6 +1,9 @@
 <script lang="ts" setup name="AppTopnav">
 import useStore from '@/store'
 const { user } = useStore()
+const logout = ()=>{
+  user.logout()
+}
 </script>
 
 <template>
@@ -9,9 +12,9 @@ const { user } = useStore()
       <ul>
       <template v-if="user.profile.token">
           <li>
-          <a href="javascript:;"><i class="iconfont icon-user"></i>{{user.profile.nickname}}</a>
+          <a href="javascript:;"><i class="iconfont icon-user"></i>{{ user.profile.nickname || user.profile.account }}</a>
         </li>
-        <li><router-link to="/login">退出登录</router-link></li>
+        <li><router-link to="/login" @click="logout">退出登录</router-link></li>
       </template>
         <template v-else>
        <li><RouterLink to="/login">请先登录</RouterLink></li>

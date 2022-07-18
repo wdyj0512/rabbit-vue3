@@ -28,14 +28,16 @@ const hMessage = async()=>{
   //   return
   // }
   const res = await validate()
-  if(!res.valid) return
-  try{
-  await user.login({account:account.value,password:password.value})
+  if (active.value === 'account') {
+    // 如果表单校验通过
+    if (res.errors.account || res.errors.password || res.errors.isAs) return
+    await user.login({account:account.value,password:password.value})
+  } else {
+    if (res.errors.mobile || res.errors.code || res.errors.isAs) return
+    await user.mobileLogin(mobile.value, code.value)
+  }
     Message.success('登录成功')
     router.push('/')
-  }catch(e){
-    Message.error('宝，用户名或密码错了')
-  }
 }
 const {validate,resetForm} = useForm({
   validationSchema:{
@@ -63,6 +65,13 @@ const {validate,resetForm} = useForm({
       if (!/^\d{6}$/.test(value)) return '验证码格式错误'
       return true
     },
+  },
+    initialValues: {
+    mobile: '13666666666',
+    code: '123456',
+    account: 'xiaotuxian001',
+    password: '123456',
+    isAs: true
   }
 })
 const {value:account, errorMessage:accountMessage} = useField<string>('account')
@@ -75,14 +84,6 @@ const mobileRef = ref<HTMLInputElement | null>(null)
 const mobiles = ref<HTMLInputElement | null>(null)
 const timer = ref(0)
 const send = async()=>{
-  if(timer.value>0) return
-  timer.value = 60
-  const timeId = setInterval(()=>{
-    timer.value--
-    if(timer.value===0){
-      clearInterval(timeId)
-    }
-  },1000)
   const res = await validateMobile()
     if (!res.valid) {
       // 校验没通过
@@ -92,6 +93,16 @@ const send = async()=>{
       await user.sendMobileMsg(mobile.value)
       Message.success('获取验证码成功')
       mobileRef.value?.focus()
+
+  if(timer.value>0) return
+  timer.value = 60
+  const timeId = setInterval(()=>{
+    timer.value--
+    if(timer.value===0){
+      clearInterval(timeId)
+    }
+  },1000)
+ 
 }
 </script>
 <template>
@@ -153,10 +164,13 @@ const send = async()=>{
       <a href="javascript:;" class="btn"  @click="hMessage" >登录</a>
     </div>
     <div class="action">
-      <img
-        src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png"
-        alt=""
-      />
+   <a
+  href="https://graph.qq.com/oauth2.0/authorize?client_id=100556005&amp;response_type=token&amp;scope=all&amp;redirect_uri=http%3A%2F%2Fwww.corho.com%3A8080%2F%23%2Flogin%2Fcallback"
+  ><img
+    src="https://qzonestyle.gtimg.cn/qzone/vas/opensns/res/img/Connect_logo_7.png"
+    alt="QQ登录"
+    border="0"
+/></a>
       <div class="url">
         <a href="javascript:;">忘记密码</a>
         <a href="javascript:;">免费注册</a>
