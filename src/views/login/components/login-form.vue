@@ -5,6 +5,7 @@ import Message from '@/components/message/message';
 import useStore from '@/store';
 import { useRouter } from 'vue-router';
 import {useField,useForm} from 'vee-validate'
+import { accountRule, codeRule, isAgreeRule, mobileRule, passwordRule } from '@/utils/validate';
 const router = useRouter()
 const active = ref<'account' | 'mobile'>('account')
 const {user} = useStore()
@@ -41,30 +42,11 @@ const hMessage = async()=>{
 }
 const {validate,resetForm} = useForm({
   validationSchema:{
-    account(value:string){
-      if(!value?.trim().length) return '用户名不能为空'
-      if (!/^[a-zA-Z]\w{5,19}$/.test(value)) return '字母开头且6-20个字符'
-      return true
-    },
-    password: (value: string) => {
-      if (!value) return '请输入密码'
-      if (!/^\w{6,12}$/.test(value)) return '密码必须是6-24位字符'
-      return true
-    },
-    isAs: (value: boolean) => {
-      if (!value) return '请同意隐私条款'
-      return true
-    },
-   mobile: (value: string) => {
-      if (!value) return '请输入手机号'
-      if (!/^1[3-9]\d{9}$/.test(value)) return '手机号格式错误'
-      return true
-    },
-    code: (value: string) => {
-      if (!value) return '请输入验证码'
-      if (!/^\d{6}$/.test(value)) return '验证码格式错误'
-      return true
-    },
+    account: accountRule,
+    password: passwordRule,
+    isAgree: isAgreeRule,
+    mobile: mobileRule,
+    code: codeRule
   },
     initialValues: {
     mobile: '13666666666',

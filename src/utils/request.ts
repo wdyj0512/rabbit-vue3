@@ -30,8 +30,19 @@ instance.interceptors.response.use(
   function (response) {
     return response
   },
-  function (error) {
+  function (error: AxiosError<{ message: string, code: string }>) {
     // 对响应错误做点什么
+    // console.log(error)
+    if (error.response) {
+      const { code, message } = error.response.data
+      if (code === '501' && message === '三方登录失败') {
+        Message.success('欢迎来到小兔鲜, 请您绑定账号')
+      } else {
+        Message.error(message)
+      }
+    } else {
+      Message.error('网络错误, 请重试')
+    }
     return Promise.reject(error)
   }
 )

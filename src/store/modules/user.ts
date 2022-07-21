@@ -33,6 +33,11 @@ export default defineStore('user',{
       logout(){
         removeProile()
         this.profile={} as Profile
+      },
+      async qqLogin(data: { unionId: string, source: number }) {
+        const res = await request.post<ApiRes<Profile>>('/login/social', data)
+        this.profile = res.data.result
+        setProfile(res.data.result)
       }
     }
     
